@@ -1,34 +1,44 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import useInitialize from "./useInitialize.ts";
+import PetsList, {PetAvailability} from "./PetsList.tsx";
+import {RouterProvider, createBrowserRouter} from 'react-router'
+import HomeComponent from "./HomeComponent.tsx";
+import PetDetails from "./PetDetails.tsx";
+import PetFormComponent from "./PetFormComponent.tsx";
+
+export const petDetailsPath = "/pets/";
+export const archivePath = "/archive";
+export const petFormPath = "/form"
 
 function App() {
-  const [count, setCount] = useState(0)
 
+    useInitialize();
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <RouterProvider router ={createBrowserRouter([
+          {
+              path: "/",
+              element: <HomeComponent/>,
+              children: [
+                  {
+                      path: "/",
+                      element: <PetsList availability={PetAvailability.AVAILABLE} />
+                  },
+                  {
+                      path: petDetailsPath + ":petId",
+                      element: <PetDetails/>
+                  },
+                  {
+                      path: archivePath,
+                      element: <PetsList availability={PetAvailability.SOLD} />
+                  },
+                  {
+                      path: petFormPath,
+                      element: <PetFormComponent/>
+                  }
+                  ]
+               }
+
+      ])}>
+    </RouterProvider>
   )
 }
 
